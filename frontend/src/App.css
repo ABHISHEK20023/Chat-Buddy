@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;1,300&family=Roboto&family=Work+Sans:wght@300&display=swap');
+
+.App{
+  min-height: 100vh;
+  display: flex;
+  background-image: url("https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjQ4MS1iYi1uaW5nLTEyYl8xLmpwZw.jpg");
+  background-size:cover;
+  background-position: center;
+}
