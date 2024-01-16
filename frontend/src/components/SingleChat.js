@@ -3,7 +3,7 @@ import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
 import { IconButton, Spinner, useToast } from "@chakra-ui/react";
-import { getSender, getSenderFull } from "../config/ChatLogics";
+import {  getSenderFull } from "../config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -15,7 +15,6 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -26,7 +25,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [typing, setTyping] = useState(false);
     const [istyping, setIsTyping] = useState(false);
     const toast = useToast();
-
     const defaultOptions = {
         loop: true,
         autoplay: true,
@@ -105,8 +103,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     };
 
     useEffect(() => {
-        socket = io(ENDPOINT);
+         socket = io.connect('http://localhost:5000');
         socket.emit("setup", user);
+        if(selectedChat)
+        socket.emit("join chat", selectedChat._id);
         socket.on("connected", () => setSocketConnected(true));
         socket.on("typing", () => setIsTyping(true));
         socket.on("stop typing", () => setIsTyping(false));
@@ -180,7 +180,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     {messages &&
                         (!selectedChat.isGroupChat ? (
                             <>
-                                {getSender(user, selectedChat.users)}
+                                {/* {getSender(user, selectedChat.users)} */}
                                 <ProfileModal
                                     user={getSenderFull(user, selectedChat.users)}
                                 />

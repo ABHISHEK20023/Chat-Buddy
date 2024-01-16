@@ -2,5 +2,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    scrollbar-width: none;
+}
+
+.messages::-webkit-scrollbar{
+    width:0px;
 }

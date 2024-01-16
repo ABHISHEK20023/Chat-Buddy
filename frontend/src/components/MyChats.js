@@ -86,7 +86,13 @@ const MyChats = ({ fetchAgain }) => {
                 overflowY="hidden"
             >
                 {chats ? (
-                    <Stack overflowY="scroll">
+                    <Stack overflowY="scroll" sx={
+                        {
+                            '::-webkit-scrollbar': {
+                                display: 'none'
+                            }
+                        }
+                    }>
                         {chats.map((chat) => (
                             <Box
                                 onClick={() => setSelectedChat(chat)}
