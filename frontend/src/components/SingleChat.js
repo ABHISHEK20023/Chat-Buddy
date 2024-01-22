@@ -105,8 +105,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     useEffect(() => {
          socket = io.connect('http://localhost:5000');
         socket.emit("setup", user);
-        if(selectedChat)
-        socket.emit("join chat", selectedChat._id);
+        // if(selectedChat)
+        // socket.emit("join chat", selectedChat._id);
         socket.on("connected", () => setSocketConnected(true));
         socket.on("typing", () => setIsTyping(true));
         socket.on("stop typing", () => setIsTyping(false));
