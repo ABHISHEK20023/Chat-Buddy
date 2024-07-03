@@ -18,11 +18,11 @@ const { Server } = require("socket.io");
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: ['https://chat-buddy-flst.onrender.com', 'http://localhost:3000']
 }));
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000'
+        origin: ['https://chat-buddy-flst.onrender.com', 'http://localhost:3000']
     }
 });
 
