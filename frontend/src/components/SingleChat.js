@@ -4,7 +4,7 @@ import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
 import { IconButton, Spinner, useToast } from "@chakra-ui/react";
 import {  getSenderFull } from "../config/ChatLogics";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
@@ -24,6 +24,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [socketConnected, setSocketConnected] = useState(false);
     const [typing, setTyping] = useState(false);
     const [istyping, setIsTyping] = useState(false);
+    const msgref=useRef(null)
     const toast = useToast();
     const defaultOptions = {
         loop: true,
@@ -122,6 +123,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }, [selectedChat]);
 
     useEffect(() => {
+        // if (selectedChat){
+        //     console.log(msgref.current)
+        //     msgref.current.scrollTop = msgref.current.scrollHeight;
+        // }
         socket.on("message recieved", (newMessageRecieved) => {
             if (
                 !selectedChatCompare || // if chat is not selected or doesn't match current chat
@@ -136,6 +141,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             }
         });
     });
+
+    useEffect(() => {
+        // Scroll to the bottom whenever messages change
+        if (msgref.current) {
+            msgref.current.scrollTop = msgref.current.scrollHeight;
+        }
+    }, [messages]);
 
     const typingHandler = (e) => {
         setNewMessage(e.target.value);
@@ -216,7 +228,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     margin="auto"
                 />
             ) : (
-                <div className="messages">
+                <div className="messages" ref={msgref}>
                     <ScrollableChat messages={messages} />
                 </div>
             )}
