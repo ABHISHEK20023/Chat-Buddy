@@ -56,17 +56,18 @@ server.listen(PORT,()=>{
     console.log('listening on port',PORT)
 })
 
-
+var activeCalls = new Map();
 io.on("connection", (socket) => {
     console.log("Connected to socket.io");
     socket.on("setup", (userData) => {
+        // console.log(userData._id)
         socket.join(userData._id);
         socket.emit("connected");
     });
 
     socket.on("join chat", (room) => {
         socket.join(room);
-        console.log("User Joined Room: " + room);
+        // console.log("User Joined Room: " + room);
     });
     socket.on("typing", (room) => socket.to(room).emit("typing"));
     socket.on("stop typing", (room) => socket.to(room).emit("stop typing"));
@@ -82,6 +83,65 @@ io.on("connection", (socket) => {
             socket.to(user._id).emit("message recieved", newMessageRecieved);
         });
     });
+
+
+    socket.on("video-call", (videoCallChat, callUser, user,offer) => {
+        // console.log(callUser, user);
+
+        // Store call data globally
+        const callId = `${callUser}-${user}`;  // Unique ID for the call
+        activeCalls.set(callId, { isCallPicked: false });
+        // console.log("call id 1 : ", callId)
+
+
+        socket.to(callUser).emit("user-calling", videoCallChat,offer);
+        
+
+        // Timeout to check if the call is picked
+        setTimeout(() => {
+            if (!activeCalls.get(callId)?.isCallPicked) {
+                console.log("Call not picked, ending...");
+                // socket.to(user).emit("end call");
+                io.to(callUser).to(user).emit("end call");
+            }
+            activeCalls.delete(callId);  // Clean up after the call
+        }, 20000);
+    });
+  
+    // Use stored data when call is accepted
+    socket.on("call accepted", (callUser, user,ans) => {
+        // console.log("call accepted")
+        const callId = `${callUser}-${user}`;
+        // console.log("call id 2 : ",callId)
+
+
+        if (activeCalls.has(callId)) {
+            activeCalls.get(callId).isCallPicked = true;  // Set picked status
+            console.log(`Call accepted by: ${user}`);
+
+            // Notify both clients
+            socket.to(user).emit("call accepted",ans);
+            // socket.to(callUser).emit("call accepted");
+        }
+    });
+
+
+    socket.on("end call", (callUser, user) => {
+        const callId1 = `${callUser}-${user}`;
+        const callId2 = `${user}-${callUser}`;
+        if (activeCalls.has(callId1))
+        activeCalls.delete(callId1);  // Clean up the call status
+        if (activeCalls.has(callId2))
+            activeCalls.delete(callId2);  // Clean up the call status
+        socket.to(callUser).emit("end call");
+    });
+
+    
+    socket.on("new-ice-candidate",(candidate,sendTo)=>{
+        // console.log("candidate received : ",candidate);
+        socket.to(sendTo).emit("new-ice-candidate",candidate)
+    })
+
     socket.off("setup", () => {
         console.log("USER DISCONNECTED");
         socket.leave(userData._id);
