@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { use } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ChatContext = createContext();
@@ -8,7 +9,14 @@ const ChatProvider = ({ children }) => {
     const [user, setUser] = useState();
     const [notification, setNotification] = useState([]);
     const [chats, setChats] = useState([]);
-
+    const [videoCallChat, setVideoCallChat] = useState("");
+    const [remoteStream,
+        setRemoteStream]=useState(null);
+    const [isCallPicked, setIsCallPicked] = useState(true);
+    const [isCaller, setIsCaller] = useState(false);
+    const [calleStream, setCalleStream] = useState(null)
+    const [offer, setOffer] = useState();
+    const [Peer, setPeer] = useState();
     const Navigate = useNavigate();
 
     useEffect(() => {
@@ -29,6 +37,20 @@ const ChatProvider = ({ children }) => {
                 setNotification,
                 chats,
                 setChats,
+                videoCallChat,
+                setVideoCallChat,
+                isCallPicked,
+                setIsCallPicked,
+                offer,
+                setOffer,
+                Peer,
+                setPeer,
+                isCaller,
+                setIsCaller,
+                calleStream,
+                setCalleStream,
+                remoteStream,
+                setRemoteStream
             }}
         >
             {children}

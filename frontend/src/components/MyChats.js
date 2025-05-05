@@ -8,7 +8,7 @@ import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
-
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 const MyChats = ({ fetchAgain }) => {
     const [loggedUser, setLoggedUser] = useState();
 
@@ -108,6 +108,11 @@ const MyChats = ({ fetchAgain }) => {
                                     {!chat.isGroupChat
                                         ? getSender(loggedUser, chat.users)
                                         : chat.chatName}
+                                    {/* {<DotLottieReact
+                                        src="https://lottie.host/ce8b5719-6f7b-4e97-a6a4-0547b06cac6a/v1iZKRMacY.json"
+                                        loop
+                                        autoplay
+                                    />} */}
                                 </Text>
                                 {chat.latestMessage && (
                                     <Text fontSize="xs">
