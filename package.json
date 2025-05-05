@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Abhishek Goyal",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "nodemon": "^3.0.1",
+    "simple-peer": "^9.11.1",
     "socket.io": "^4.7.4"
   }
 }
