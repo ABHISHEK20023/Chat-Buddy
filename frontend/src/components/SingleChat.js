@@ -147,7 +147,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }, [socket, videoCallChat, user, Peer]);
 
     useEffect(() => {
-        socket = io.connect('http://localhost:5000');
+        // socket = io.connect('http://localhost:5000');
+        const BACKEND_URL =
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:5000" // your local server
+                : "https://chat-buddy-flst.onrender.com"; // your deployed backend
+
+         socket = io(BACKEND_URL, {
+            transports: ["websocket"],
+            withCredentials: true,
+        });
+
         socket.emit("setup", user);
         socket.on("connected", () => setSocketConnected(true));
         socket.on("typing", () => setIsTyping(true));
